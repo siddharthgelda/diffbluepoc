@@ -49,7 +49,9 @@ class DiffBlueControllerDiffblueTest {
         MockMvcBuilders.standaloneSetup(diffBlueController)
                 .build()
                 .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
+                .andExpect(MockMvcResultMatchers.content().string("valid EmailId"));
     }
 
     /**
@@ -73,6 +75,9 @@ class DiffBlueControllerDiffblueTest {
                 .perform(requestBuilder);
 
         // Assert
-        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400))
+                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
+                .andExpect(MockMvcResultMatchers.content().string("EmailId not valid"));
     }
+
 }
