@@ -1,0 +1,52 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		//Needed only for SNAPSHOT versions
+		//maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+	}
+	dependencies {
+		classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
+	}
+}
+
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.5'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'info.solidsoft.pitest' version '1.15.0'
+}
+pitest {
+	targetClasses = ['our.diffblue.*']  //by default "${project.group}.*"
+	pitestVersion = '1.15.0' //not needed when a default PIT version should be used
+	threads = 4
+	outputFormats = ['XML', 'HTML']
+	timestampedReports = false
+}
+
+group = 'com.test'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
