@@ -43,15 +43,15 @@ class DiffBlueControllerDiffblueTest {
     void testValidateEmail_givenDiffBlueServcieValidateEmailidReturnTrue_thenStatusIsOk() throws Exception {
         // Arrange
         when(diffBlueServcie.validateEmailid(Mockito.<String>any())).thenReturn(true);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/").param("emailId", "foo");
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api").param("emailId", "foo");
 
         // Act and Assert
         MockMvcBuilders.standaloneSetup(diffBlueController)
                 .build()
                 .perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
-                .andExpect(MockMvcResultMatchers.content().string("valid EmailId"));
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("{\"status\":200,\"message\":\"valid EmailId\"}"));
     }
 
     /**
@@ -67,7 +67,7 @@ class DiffBlueControllerDiffblueTest {
     void testValidateEmail_thenStatusFourHundred() throws Exception {
         // Arrange
         when(diffBlueServcie.validateEmailid(Mockito.<String>any())).thenReturn(false);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/").param("emailId", "foo");
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api").param("emailId", "foo");
 
         // Act
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(diffBlueController)
@@ -76,8 +76,7 @@ class DiffBlueControllerDiffblueTest {
 
         // Assert
         actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400))
-                .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=ISO-8859-1"))
-                .andExpect(MockMvcResultMatchers.content().string("EmailId not valid"));
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("{\"status\":400,\"message\":\"EmailId not valid\"}"));
     }
-
 }
