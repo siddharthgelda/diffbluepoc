@@ -10,17 +10,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class DiffBlueController {
-@Autowired
-DiffBlueServcie diffBlueServcie;
+    @Autowired
+    DiffBlueServcie diffBlueServcie;
 
     @GetMapping
-    public ResponseEntity<StatusDTO> validateEmail(@RequestParam("emailId")String emailId){
+    public ResponseEntity<StatusDTO> validateEmail(@RequestParam("emailId") String emailId) {
         boolean result = diffBlueServcie.validateEmailid(emailId);
-        if(result)
-        {
-            return ResponseEntity.ok(new StatusDTO(200,"valid EmailId"));
-        }else{
-            return ResponseEntity.badRequest().body(new StatusDTO(400,"EmailId not valid"));
+        if (result) {
+            return ResponseEntity.ok(new StatusDTO(200, "valid EmailId"));
+        } else {
+            return ResponseEntity.badRequest().body(new StatusDTO(400, "EmailId not valid"));
+        }
+
+    }
+
+    @GetMapping
+
+    @RequestMapping("/emp")
+    public ResponseEntity<EmpDTO> getEmpDetails(@RequestParam("id") int id) {
+        EmpDTO result = diffBlueServcie.getEmpDetails(id);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().build();
         }
 
     }

@@ -1,5 +1,6 @@
 package com.diffblue;
 
+import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +28,56 @@ class DiffBlueControllerDiffblueTest {
 
     @MockBean
     private DiffBlueServcie diffBlueServcie;
+
+    /**
+     * Test {@link DiffBlueController#getEmpDetails(int)}.
+     * <ul>
+     *   <li>Then status four hundred.</li>
+     * </ul>
+     * <p>
+     * Method under test: {@link DiffBlueController#getEmpDetails(int)}
+     */
+    @Test
+    @DisplayName("Test getEmpDetails(int); then status four hundred")
+    void testGetEmpDetails_thenStatusFourHundred() throws Exception {
+        // Arrange
+        when(diffBlueServcie.getEmpDetails(anyInt())).thenReturn(null);
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/api/emp");
+        MockHttpServletRequestBuilder requestBuilder = getResult.param("id", String.valueOf(1));
+
+        // Act
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(diffBlueController)
+                .build()
+                .perform(requestBuilder);
+
+        // Assert
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    /**
+     * Test {@link DiffBlueController#getEmpDetails(int)}.
+     * <ul>
+     *   <li>Then status {@link StatusResultMatchers#isOk()}.</li>
+     * </ul>
+     * <p>
+     * Method under test: {@link DiffBlueController#getEmpDetails(int)}
+     */
+    @Test
+    @DisplayName("Test getEmpDetails(int); then status isOk()")
+    void testGetEmpDetails_thenStatusIsOk() throws Exception {
+        // Arrange
+        when(diffBlueServcie.getEmpDetails(anyInt())).thenReturn(new EmpDTO(1, "Name", "Dept"));
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/api/emp");
+        MockHttpServletRequestBuilder requestBuilder = getResult.param("id", String.valueOf(1));
+
+        // Act and Assert
+        MockMvcBuilders.standaloneSetup(diffBlueController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("{\"id\":1,\"name\":\"Name\",\"dept\":\"Dept\"}"));
+    }
 
     /**
      * Test {@link DiffBlueController#validateEmail(String)}.
